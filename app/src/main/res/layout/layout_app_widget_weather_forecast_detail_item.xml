@@ -25,7 +25,7 @@
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:text="@string/tuesday"
-        android:textColor="?android:textColorPrimary"
+        android:textColor="@color/white"
         android:textStyle="bold" />
 
     <ImageView
@@ -43,7 +43,7 @@
         android:layout_marginEnd="8dp"
         android:gravity="center_vertical"
         android:text="@string/widget_weather_degree"
-        android:textColor="?android:textColorSecondary" />
+        android:textColor="@color/white" />
 
     <TextView
         style="@style/TextAppearance.AppCompat.Medium"
@@ -51,6 +51,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:text="@string/widget_weather_degree"
-        android:textColor="?android:textColorSecondary" />
+        android:textColor="@color/white" />
 
 </LinearLayout>

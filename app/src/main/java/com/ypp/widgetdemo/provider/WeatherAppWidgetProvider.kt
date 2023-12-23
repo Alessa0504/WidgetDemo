@@ -3,6 +3,7 @@ package com.ypp.widgetdemo.provider
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -10,8 +11,11 @@ import android.os.Bundle
 import android.util.Log
 import android.util.SizeF
 import android.widget.RemoteViews
+import androidx.work.WorkManager
 import com.ypp.widgetdemo.MainActivity
 import com.ypp.widgetdemo.R
+import com.ypp.widgetdemo.worker.WeatherAppWidgetWorkScheduler
+import com.ypp.widgetdemo.worker.WeatherAppWidgetWorker
 
 /**
  * @Description:
@@ -71,9 +75,10 @@ class WeatherAppWidgetProvider: AppWidgetProvider() {
      *
      * @param context
      */
-    override fun onEnabled(context: Context?) {
+    override fun onEnabled(context: Context) {
         Log.d(TAG, "onEnabled:")
-        //todo worker update
+        WeatherAppWidgetWorkScheduler.scheduleOneShotWork(context)
+        WeatherAppWidgetWorkScheduler.schedulePeriodicWork(context)
     }
 
     /**
@@ -81,9 +86,11 @@ class WeatherAppWidgetProvider: AppWidgetProvider() {
      *
      * @param context
      */
-    override fun onDisabled(context: Context?) {
+    override fun onDisabled(context: Context) {
         Log.d(TAG, "onDisabled:")
-        //todo worker canceled
+        val workManager = WorkManager.getInstance(context)
+        workManager.cancelAllWorkByTag(WeatherAppWidgetWorker.PERIODIC_WORK)   //取消任务
+        workManager.cancelAllWorkByTag(WeatherAppWidgetWorker.ONE_TIME_WORK)
     }
 
     /**
@@ -93,11 +100,22 @@ class WeatherAppWidgetProvider: AppWidgetProvider() {
      * @param intent
      */
     override fun onReceive(context: Context?, intent: Intent?) {
+        super.onReceive(context, intent)
         Log.d(TAG, "onReceive:")
     }
 
     companion object {
         private val TAG = WeatherAppWidgetProvider::class.java.simpleName
+
+        /**
+         * 对外提供provider
+         *
+         * @param context
+         */
+        fun getProvider(context: Context) = ComponentName(
+            context,
+            WeatherAppWidgetProvider::class.java
+        )
 
         fun updateWeatherAppWidget(
             context: Context,
