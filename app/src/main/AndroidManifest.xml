@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.WidgetDemo"
+        tools:targetApi="31">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- 桌面小组件 -->
+        <receiver android:name=".provider.WeatherAppWidgetProvider"
+            android:exported="true">
+<!--            android.appwidget.action.APPWIDGET_UPDATE 广播动作，它是用于更新小部件的广播
+当系统发送该广播时，所有注册了具有相应 <intent-filter> 的 AppWidgetProvider 都会接收到该广播，并通过调用 onReceive() 方法进行处理-->
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+<!--            <meta-data> 元素被用于指定小部件提供者的相关信息。-->
+<!--            具体来说，android:name 属性指定了元数据的名称为 android.appwidget.provider，而 android:resource 属性指定了资源文件 @xml/app_widget_info 中包含有关小部件提供者的信息。-->
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_info" />
+        </receiver>
+    </application>
+
+</manifest>
